@@ -11,7 +11,7 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<FirstPage />} />
-          <Route path="/grid" element={<SecondPage />} />
+          <Route path="/second" element={<SecondPage />} />
         </Routes>
       </div>
     </Router>

@@ -1,54 +1,112 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import Image from "../assets/image.png";
 
 const FirstPage = () => {
-  const [gridColors, setGridColors] = useState(Array(9).fill('bg-blue-500'));
+  const [screenSize, setScreenSize] = useState("desktop");
+
+  const [gridColors, setGridColors] = useState([
+    ...Array(8).fill("bg-[#00407A]"),
+    "bg-[#7A0000]", 
+  ]);
+  const [clickedIndices, setClickedIndices] = useState([]);
 
   const handleSquareClick = (index) => {
     if (index === 8) {
-      setGridColors(Array(9).fill('bg-blue-500'));
+      clickedIndices.forEach((clickedIndex, i) => {
+        setTimeout(() => {
+          setGridColors((prevColors) => {
+            const newColors = [...prevColors];
+            newColors[clickedIndex] = "bg-[#00407A]";
+            return newColors;
+          });
+        }, i * 200);
+      });
+      setClickedIndices([]);
     } else {
-      const updatedColors = [...gridColors];
-      updatedColors[index] = 'bg-red-500';
-      setGridColors(updatedColors);
+      setGridColors((prevColors) => {
+        const updatedColors = [...prevColors];
+        updatedColors[index] = "bg-[#7A0000]";
+        return updatedColors;
+      });
+      setClickedIndices([...clickedIndices, index]);
     }
   };
 
-  return (
-    <div className="p-6 space-y-6 bg-gradient-to-b from-gray-100 to-gray-300 min-h-screen">
-      {/* Header Section */}
-      <div className="rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 h-48 shadow-lg flex items-center justify-center">
-        <h1 className="text-4xl font-bold text-white">Welcome to E-Cell</h1>
-      </div>
+  useEffect(() => {
+    const updateScreenSize = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) setScreenSize("desktop");
+      else if (width >= 768) setScreenSize("tablet");
+      else setScreenSize("smartphone");
+    };
 
-      {/* Logo Section */}
-      <div className="rounded-lg bg-white h-48 flex items-center justify-center shadow-lg border border-gray-300">
-        <img
-          src="https://s3-alpha-sig.figma.com/img/f451/3151/c543be76d658fa7cf401125e9cef6f94?Expires=1738540800&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Umhrmf3ve5VwHjU9x-4lqn9VoteG~xmqFFAJ1NFlSAPT2F1K~eCqdTncMldvRuSwe7MGXpMkWCK9BVDlwoLxeKQ8MOk22FzwjwYl~dXpuh2U35tx1RvrkuHzRks0J7qpvRw~3LguA3Xi4mQjmUtCMqf9V7DbbaYO38HIqgj4iJ1JJ6u05G6GZZI5IqORNTSqkpUoRjfh1YuRICXgk79qz0718w~phQ2SE3Bmh1NCvyTjFecnU6ajWd6Bjj-mQ0gqKBCsaTsYA-X9YzyKyRkyCY6r8bDTCU43ejpA3U6bhERIx1CEgfUCQwTsnlKkwvdY0R56TLm38CkTc38cvbgyqQ__"
-          alt="E-Cell Logo"
-          className="h-32 w-32 object-contain"
-        />
-      </div>
+    updateScreenSize();
+    window.addEventListener("resize", updateScreenSize);
 
-      {/* Interactive Grid */}
-      <div className="rounded-lg bg-gray-100 shadow-inner p-6 grid grid-cols-3 gap-4">
+    return () => window.removeEventListener("resize", updateScreenSize);
+  }, []);
+
+  const renderLayout = () => {
+    if (screenSize === "desktop") {
+      return (
+        <div className="flex flex-row gap-6 px-4">
+          {renderDiv1()}
+          {renderDiv2()}
+          {renderDiv3()}
+        </div>
+      );
+    } else if (screenSize === "tablet") {
+      return (
+        <div className="flex flex-col gap-6 px-4 ">
+          {renderDiv1()}
+          <div className="flex flex-row gap-6">
+            {renderDiv2()}
+            {renderDiv3()}
+          </div>
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex flex-col gap-6 px-4 ">
+          {renderDiv3()}
+          {renderDiv2()}
+          {renderDiv1()}
+        </div>
+      );
+    }
+  };
+
+  const renderDiv1 = () => (
+    <div className="w-full lg:w-1/3 h-64 md:h-96 rounded-xl bg-gradient-to-br from-[#3300FF] to-[#FA00FF] shadow-lg border-[5px] border-gray-300 px-4"></div>
+  );
+
+  const renderDiv2 = () => (
+    <div className="w-full md:w-1/2 lg:w-1/3 h-64 md:h-96 rounded-xl bg-white flex items-center justify-center px-4 border-4 border-black">
+      <img
+        src={Image}
+        alt="E-Cell Logo"
+        className="w-[100%] h-[100%] object-contain "
+      />
+    </div>
+  );
+
+  const renderDiv3 = () => (
+    <div className="w-full md:w-1/2 lg:w-1/3 h-64 md:h-96 rounded-xl bg-[#D9D9D9] shadow-inner p-6 flex items-center justify-center px-4">
+      <div className="grid grid-cols-3 gap-2">
         {gridColors.map((color, index) => (
           <div
             key={index}
-            className={`h-20 w-20 ${color} cursor-pointer transform transition duration-200 hover:scale-110`}
+            className={`h-16 md:h-24 w-16 md:w-24 ${color} rounded-lg cursor-pointer transform transition duration-300 hover:scale-110`}
             onClick={() => handleSquareClick(index)}
           ></div>
         ))}
       </div>
+    </div>
+  );
 
-      {/* Reset Button */}
-      <div className="flex justify-center">
-        <button
-          onClick={() => setGridColors(Array(9).fill('bg-blue-500'))}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-        >
-          Reset Grid
-        </button>
-      </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300 p-4 md:p-10">
+      {renderLayout()}
     </div>
   );
 };
