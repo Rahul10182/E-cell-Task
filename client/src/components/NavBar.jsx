@@ -43,7 +43,7 @@ const Navbar = () => {
       )}
 
       {/* Desktop & Tablet Links - Aligned Right */}
-      <div className="hidden md:flex space-x-6 ml-auto">
+      <div className="hidden sm:flex space-x-6 ml-auto">
         <Link to="/second" className={`hover:text-pink-500 transition ${isSquidGamePage ? "text-white" : "text-black"}`}>
           Home
         </Link>
@@ -59,6 +59,35 @@ const Navbar = () => {
           LinkedIn
         </a>
       </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="flex flex-col items-center justify-center mt-6 md:hidden">
+          <Link
+            to="/second"
+            className="hover:text-pink-500 transition text-lg"
+            onClick={toggleMenu}
+          >
+            Home
+          </Link>
+          <Link
+            to="/"
+            className="hover:text-pink-500 transition text-lg"
+            onClick={toggleMenu}
+          >
+            Grid
+          </Link>
+          <a
+            href="https://www.linkedin.com/in/rahul-singh-3054862a6/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-pink-500 transition text-lg"
+            onClick={toggleMenu}
+          >
+            LinkedIn
+          </a>
+        </div>
+      )}
     </nav>
   );
 };

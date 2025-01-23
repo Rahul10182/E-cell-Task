@@ -82,12 +82,12 @@ const FirstPage = () => {
 
   const renderDiv2 = () => (
     <div className="w-full md:w-1/2 lg:w-1/3 h-64 md:h-96 rounded-xl bg-white flex items-center justify-center px-4 border-4 border-black">
-      <img
-        src={Image}
-        alt="E-Cell Logo"
-        className="w-[100%] h-[100%] object-contain "
-      />
-    </div>
+    <img
+      src={Image}
+      alt="E-Cell Logo"
+      className="w-full h-full object-cover rounded-xl"
+    />
+  </div>
   );
 
   const renderDiv3 = () => (
